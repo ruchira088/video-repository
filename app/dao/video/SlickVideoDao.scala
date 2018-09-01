@@ -32,10 +32,17 @@ class SlickVideoDao @Inject()(protected val dbConfigProvider: DatabaseConfigProv
 
     def location: Rep[Path] = column[Path]("location")
 
-    override def * : ProvenShape[Video] = (id, addedAt, fileName, fileSize, location) <> (Video.apply _ tupled, Video.unapply)
+    override def * : ProvenShape[Video] =
+      (id, addedAt, fileName, fileSize, location) <> (Video.apply _ tupled, Video.unapply)
   }
 
-  override def insert(video: Video)(implicit executionContext: ExecutionContext): Future[Video] = ???
+  val videos = TableQuery[VideoTable]
 
-  override def findById(id: String)(implicit executionContext: ExecutionContext): FutureMonad[Option, Video] = ???
+  override def insert(video: Video)(implicit executionContext: ExecutionContext): Future[Video] =
+    db.run(videos += video).map(_ => video)
+
+  override def findById(id: String)(implicit executionContext: ExecutionContext): FutureMonad[Option, Video] =
+    FutureMonad {
+      db.run(videos.filter(_.id === id).result.headOption)
+    }
 }
