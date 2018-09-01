@@ -14,6 +14,12 @@ case class FutureMonad[M[+ _], +A](future: Future[M[A]])
 
   def map[B](f: A => B)(implicit monad: Monad[M], executionContext: ExecutionContext): FutureMonad[M, B] =
     flatMap(value => FutureMonad(monad.pure(f(value))))
+
+  def transform[B](monadFailure: Throwable => Future[B])(success: A => Future[B])
+                  (implicit monad: Monad[M], executionContext: ExecutionContext): Future[B] =
+    future.flatMap {
+      monad.fold(monadFailure, success)
+    }
 }
 
 object FutureMonad
@@ -22,4 +28,13 @@ object FutureMonad
     FutureMonad {
       Future.successful(value)
     }
+
+  def apply[M[+ _], A](future: Future[A])
+                      (implicit monad: Monad[M], executionContext: ExecutionContext): FutureMonad[M, A] =
+    FutureMonad {
+      future.map(monad.pure)
+    }
+
+  def apply[M[+ _], A](value: A, monad: Monad[M]): FutureMonad[M, A] =
+    apply(monad.pure(value))
 }

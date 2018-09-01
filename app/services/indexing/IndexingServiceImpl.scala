@@ -3,17 +3,42 @@ package services.indexing
 import java.io.File
 import java.nio.file.Path
 
-import javax.inject.Singleton
-import services.indexing.models.IndexingResult
+import dao.video.VideoDao
+import javax.inject.{Inject, Singleton}
+import services.indexing.IndexingService.{fromFile, isVideoFile}
+import services.indexing.models.{IndexingResult, IndexingResultsSummary}
+import utilities.FileUtils.listFiles
 import utilities.HashUtils
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.Future.fromTry
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IndexingServiceImpl extends IndexingService
+class IndexingServiceImpl @Inject()(videoDao: VideoDao) extends IndexingService
 {
-  override def index(path: Path)(implicit executionContext: ExecutionContext): Future[IndexingResult] = ???
+  self =>
+
+  override def index(path: Path)(implicit executionContext: ExecutionContext): Future[IndexingResultsSummary] =
+    for {
+      videoFiles <- Future { listFiles(path).filter(isVideoFile) }
+
+      indexingResults <- Future.sequence(videoFiles.map(index))
+
+      newlyAddedVideos = indexingResults.filter(_.inserted).map(_.video)
+    }
+    yield IndexingResultsSummary(indexingResults.size, newlyAddedVideos)
+
+  def index(file: File)(implicit executionContext: ExecutionContext): Future[IndexingResult] =
+    for {
+      video <- fromFile(self)(file)
+
+      indexingResult <-
+        videoDao.findById(video.id).transform[IndexingResult](
+          _ => videoDao.insert(video).map(IndexingResult(_, true))) {
+          _ => Future.successful(IndexingResult(video, false))
+        }
+    }
+    yield indexingResult
 
   override def generateId(file: File)(implicit executionContext: ExecutionContext): Future[String] =
     for {

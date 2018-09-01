@@ -10,6 +10,7 @@ lazy val root =
       scalaVersion := "2.12.6",
       buildInfoKeys := BuildInfoKey.ofN(name, organization, version, scalaVersion, sbtVersion),
       buildInfoPackage := "project.information",
+      scalacOptions ++= List("-feature"),
       libraryDependencies ++=
         dependencies ++ testDependencies.map(_ % Test)
     )

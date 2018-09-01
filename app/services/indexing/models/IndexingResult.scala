@@ -1,3 +1,5 @@
 package services.indexing.models
 
-case class IndexingResult()
+import services.video.models.Video
+
+case class IndexingResult(video: Video, inserted: Boolean)
