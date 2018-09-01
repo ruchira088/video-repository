@@ -42,4 +42,14 @@ class VideoController @Inject()(
         yield Ok(json(Videos(videos)))
       }
     }
+
+  def view(videoId: String): Action[AnyContent] =
+    Action.async {
+      handleExceptions {
+        for {
+          video <- videoService.getById(videoId)
+        }
+        yield Ok.sendPath(video.location)
+      }
+    }
 }
