@@ -6,7 +6,7 @@ case class ErrorResponse(errors: List[String])
 
 object ErrorResponse
 {
-  def apply(error: String): ErrorResponse = ErrorResponse(List(error))
+  def apply(throwable: Throwable): ErrorResponse = ErrorResponse(List(throwable.getMessage))
 
   implicit val errorResponseFormat: OWrites[ErrorResponse] = Json.writes[ErrorResponse]
 }

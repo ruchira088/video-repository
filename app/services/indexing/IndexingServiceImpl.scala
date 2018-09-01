@@ -42,9 +42,7 @@ class IndexingServiceImpl @Inject()(videoDao: VideoDao) extends IndexingService
   override def generateId(file: File)(implicit executionContext: ExecutionContext): Future[String] =
     for {
       fileContentHash <- HashUtils.fileHash(file)
-
-      fileNameHash <- fromTry(HashUtils.stringHash(file.getName))
       fileSize = file.length()
     }
-    yield s"$fileNameHash-$fileSize-$fileContentHash"
+    yield s"$fileContentHash$fileSize"
 }

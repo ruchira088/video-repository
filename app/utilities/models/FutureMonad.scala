@@ -20,6 +20,11 @@ case class FutureMonad[M[+ _], +A](future: Future[M[A]])
     future.flatMap {
       monad.fold(monadFailure, success)
     }
+
+  def success(onFailure: => Throwable)(implicit monad: Monad[M], executionContext: ExecutionContext): Future[A] =
+    future.flatMap {
+      monad.fold[A, Future[A]](_ => Future.failed(onFailure), Future.successful)
+    }
 }
 
 object FutureMonad

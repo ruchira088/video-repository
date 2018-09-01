@@ -1,6 +1,6 @@
 package web.utilities
 
-import exceptions.JsonParseException
+import exceptions.{JsonParseException, VideoNotFoundException}
 import play.api.libs.json.Json.{toJson => json}
 import play.api.mvc.Result
 import play.api.mvc.Results._
@@ -17,9 +17,14 @@ object ResponseUtils
           json(ErrorResponse(errors.map(_.toString)))
         }
 
+      case videoNotFoundException: VideoNotFoundException =>
+        NotFound {
+          json(ErrorResponse(videoNotFoundException))
+        }
+
       case throwable =>
         InternalServerError {
-          json(ErrorResponse(throwable.getMessage))
+          json(ErrorResponse(throwable))
         }
     }
 }

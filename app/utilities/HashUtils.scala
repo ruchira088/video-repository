@@ -2,6 +2,7 @@ package utilities
 
 import java.io.{File, FileInputStream}
 import java.security.{DigestInputStream, MessageDigest}
+import java.util.Base64
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
@@ -22,7 +23,7 @@ object HashUtils
 
       readStream()
 
-      messageDigest.digest().map(byteToHex).mkString
+      new String(Base64.getEncoder.encode(messageDigest.digest())).takeWhile(_ != '=')
     }
 
   def stringHash(string: String): Try[String] =

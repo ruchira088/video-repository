@@ -3,6 +3,7 @@ package dao.video
 import java.nio.file.Path
 
 import dao.slick.SlickMappedColumns
+import dao.video.VideoDao.PAGE_SIZE
 import javax.inject.{Inject, Singleton}
 import org.joda.time.DateTime
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
@@ -44,5 +45,10 @@ class SlickVideoDao @Inject()(protected val dbConfigProvider: DatabaseConfigProv
   override def findById(id: String)(implicit executionContext: ExecutionContext): FutureMonad[Option, Video] =
     FutureMonad {
       db.run(videos.filter(_.id === id).result.headOption)
+    }
+
+  override def getAll(page: Int)(implicit executionContext: ExecutionContext): Future[List[Video]] =
+    db.run {
+      videos.drop(PAGE_SIZE * page).take(PAGE_SIZE).result.map(_.toList)
     }
 }

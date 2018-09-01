@@ -6,3 +6,5 @@
 GET     /health-check                   web.controllers.HomeController.healthCheck()
 
 PUT     /videos/index                   web.controllers.VideoController.index()
+
+GET     /videos                         web.controllers.VideoController.all(page: Int ?= 0)

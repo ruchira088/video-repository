@@ -1,5 +1,6 @@
 logs
 target
+test/Playground.scala
 /.idea
 /.idea_modules
 /.classpath
