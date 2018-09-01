@@ -23,7 +23,7 @@ object HashUtils
 
       readStream()
 
-      new String(Base64.getEncoder.encode(messageDigest.digest())).takeWhile(_ != '=')
+      new String(Base64.getEncoder.encode(messageDigest.digest())).filter(_.isLetterOrDigit)
     }
 
   def stringHash(string: String): Try[String] =
