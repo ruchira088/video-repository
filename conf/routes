@@ -4,3 +4,5 @@
 # ~~~~
 
 GET     /health-check                   web.controllers.HomeController.healthCheck()
+
+PUT     /videos/index                   web.controllers.VideoController.index()

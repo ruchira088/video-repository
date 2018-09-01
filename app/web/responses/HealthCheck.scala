@@ -1,6 +1,6 @@
 package web.responses
 
-import json.Formats.DateTimeFormat
+import json.JsonFormats.DateTimeFormat
 import org.joda.time.DateTime
 import play.api.libs.json.{Json, OFormat}
 

@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  postgres-database:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_DB: video_repository

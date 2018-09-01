@@ -23,7 +23,6 @@ class IndexingServiceImpl @Inject()(videoDao: VideoDao) extends IndexingService
       videoFiles <- Future { listFiles(path).filter(isVideoFile) }
 
       indexingResults <- Future.sequence(videoFiles.map(index))
-
       newlyAddedVideos = indexingResults.filter(_.inserted).map(_.video)
     }
     yield IndexingResultsSummary(indexingResults.size, newlyAddedVideos)
@@ -43,6 +42,7 @@ class IndexingServiceImpl @Inject()(videoDao: VideoDao) extends IndexingService
   override def generateId(file: File)(implicit executionContext: ExecutionContext): Future[String] =
     for {
       fileContentHash <- HashUtils.fileHash(file)
+
       fileNameHash <- fromTry(HashUtils.stringHash(file.getName))
       fileSize = file.length()
     }

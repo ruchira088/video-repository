@@ -20,7 +20,7 @@ class SlickVideoDao @Inject()(protected val dbConfigProvider: DatabaseConfigProv
 {
   import profile.api._
 
-  class VideoTable(tag: Tag) extends Table[Video](tag, "video_table")
+  class VideoTable(tag: Tag) extends Table[Video](tag, "videos")
   {
     def id: Rep[String] = column[String]("id", O.PrimaryKey)
 

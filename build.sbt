@@ -20,3 +20,5 @@ lazy val dependencies =
 
 lazy val testDependencies =
   List(scalaTestPlusPlay)
+
+addCommandAlias("runWithPostgres", "run -Dconfig.file=conf/application.postgres.conf")
