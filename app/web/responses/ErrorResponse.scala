@@ -1,12 +1,12 @@
 package web.responses
 
-import play.api.libs.json.{JsString, Json, OWrites, Writes}
+import play.api.libs.json.{Json, OWrites}
 
-case class ErrorResponse(errors: List[Exception])
+case class ErrorResponse(errors: List[String])
 
 object ErrorResponse
 {
-  implicit val exceptionWrite: Writes[Exception] = (exception: Exception) => JsString(exception.getMessage)
+  def apply(error: String): ErrorResponse = ErrorResponse(List(error))
 
   implicit val errorResponseFormat: OWrites[ErrorResponse] = Json.writes[ErrorResponse]
 }
