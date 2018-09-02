@@ -4,17 +4,18 @@ import java.io.File
 import java.nio.file.Path
 
 import dao.video.VideoDao
+import execution.BlockingExecutionContext
 import javax.inject.{Inject, Singleton}
 import services.indexing.IndexingService.{fromFile, isVideoFile}
 import services.indexing.models.{IndexingResult, IndexingResultsSummary}
 import utilities.FileUtils.listFiles
 import utilities.HashUtils
 
-import scala.concurrent.Future.fromTry
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IndexingServiceImpl @Inject()(videoDao: VideoDao) extends IndexingService
+class IndexingServiceImpl @Inject()(videoDao: VideoDao, blockingExecutionContext: BlockingExecutionContext)
+  extends IndexingService
 {
   self =>
 
@@ -41,7 +42,7 @@ class IndexingServiceImpl @Inject()(videoDao: VideoDao) extends IndexingService
 
   override def generateId(file: File)(implicit executionContext: ExecutionContext): Future[String] =
     for {
-      fileContentHash <- HashUtils.fileHash(file)
+      fileContentHash <- HashUtils.fileHash(file)(blockingExecutionContext)
       fileSize = file.length()
     }
     yield s"$fileContentHash$fileSize"
