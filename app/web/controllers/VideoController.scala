@@ -45,7 +45,7 @@ class VideoController @Inject()(
       }
     }
 
-  def view(videoId: String): Action[AnyContent] =
+  def fetch(videoId: String): Action[AnyContent] =
     Action.async {
       request =>
       handleExceptions {

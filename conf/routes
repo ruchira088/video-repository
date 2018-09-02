@@ -7,8 +7,8 @@ GET     /health-check                   web.controllers.HomeController.healthChe
 
 PUT     /videos/index                   web.controllers.VideoController.index()
 
-GET     /videos/:videoId                web.controllers.VideoController.view(videoId)
+GET     /videos/:videoId                web.controllers.VideoController.fetch(videoId)
 
 GET     /videos                         web.controllers.VideoController.all(page: Int ?= 0)
 
-GET     /public/*file                   web.controllers.HomeController.resources(file)
+GET     /player/:videoId                web.controllers.HomeController.watchVideo(videoId)
