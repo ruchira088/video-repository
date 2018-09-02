@@ -1,9 +1,10 @@
 package web.controllers
 
 import javax.inject.{Inject, Singleton}
+import org.apache.tika.Tika
 import play.api.libs.json.JsValue
 import play.api.libs.json.Json.{toJson => json}
-import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
+import play.api.mvc._
 import services.indexing.IndexingService
 import services.video.VideoService
 import web.requests.IndexVideosRequest
@@ -18,6 +19,7 @@ import scala.concurrent.Future.fromTry
 class VideoController @Inject()(
   controllerComponents: ControllerComponents,
   indexingService: IndexingService,
+  tika: Tika,
   videoService: VideoService)(implicit executionContext: ExecutionContext)
     extends AbstractController(controllerComponents)
 {
@@ -45,11 +47,12 @@ class VideoController @Inject()(
 
   def view(videoId: String): Action[AnyContent] =
     Action.async {
+      request =>
       handleExceptions {
         for {
           video <- videoService.getById(videoId)
         }
-        yield Ok.sendPath(video.location)
+        yield RangeResult.ofPath(video.location, request.headers.get(RANGE), Some(tika.detect(video.location)))
       }
     }
 }

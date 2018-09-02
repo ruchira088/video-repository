@@ -10,3 +10,5 @@ PUT     /videos/index                   web.controllers.VideoController.index()
 GET     /videos/:videoId                web.controllers.VideoController.view(videoId)
 
 GET     /videos                         web.controllers.VideoController.all(page: Int ?= 0)
+
+GET     /public/*file                   web.controllers.HomeController.resources(file)

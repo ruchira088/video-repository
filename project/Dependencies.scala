@@ -12,5 +12,7 @@ object Dependencies
 
   lazy val h2 = "com.h2database" % "h2" % "1.4.197"
 
+  lazy val tikaCore = "org.apache.tika" % "tika-core" % "1.18"
+
   lazy val scalaTestPlusPlay = "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2"
 }

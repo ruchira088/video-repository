@@ -16,7 +16,7 @@ lazy val root =
     )
 
 lazy val dependencies =
-  List(guice, jodaTime, playSlick, playSlickEvolutions, postgresql, h2)
+  List(guice, jodaTime, playSlick, playSlickEvolutions, postgresql, h2, tikaCore)
 
 lazy val testDependencies =
   List(scalaTestPlusPlay)
