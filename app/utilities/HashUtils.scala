@@ -7,8 +7,7 @@ import java.util.Base64
 import com.typesafe.scalalogging.Logger
 import execution.BlockingExecutionContext
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
+import scala.concurrent.Future
 
 object HashUtils
 {
@@ -31,18 +30,19 @@ object HashUtils
 
       readStream()
 
-      val hash = new String(Base64.getEncoder.encode(messageDigest.digest())).filter(_.isLetterOrDigit)
+      val hash = base64(messageDigest.digest())
 
       logger.info(s"fileHash finished (${System.currentTimeMillis() - startTime}ms): ${file.getAbsolutePath}")
 
       hash
     }
 
-  def stringHash(string: String): Try[String] =
-    Try {
+  def stringHash(string: String)(implicit blockingExecutionContext: BlockingExecutionContext): Future[String] =
+    Future {
       val messageDigest = MessageDigest.getInstance(HASHING_ALGORITHM)
-      messageDigest.digest(string.getBytes).map(byteToHex).mkString
+      base64(messageDigest.digest(string.getBytes))
     }
 
-  def byteToHex(byte: Byte): String = "%02x".format(byte)
+  def base64(bytes: Array[Byte]): String =
+    new String(Base64.getEncoder.encode(bytes)).filter(_.isLetterOrDigit)
 }

@@ -5,8 +5,6 @@ import java.nio.file.Path
 
 object FileUtils
 {
-  val VIDEO_FILE_FORMATS = List("mp4", "flv")
-
   def listFiles(path: Path): List[File] =
   {
     val items = path.toFile.listFiles()

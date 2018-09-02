@@ -42,7 +42,7 @@ class IndexingServiceImpl @Inject()(videoDao: VideoDao, blockingExecutionContext
 
   override def generateId(file: File)(implicit executionContext: ExecutionContext): Future[String] =
     for {
-      fileContentHash <- HashUtils.fileHash(file)(blockingExecutionContext)
+      fileContentHash <- HashUtils.stringHash(file.getAbsolutePath)(blockingExecutionContext)
       fileSize = file.length()
     }
     yield s"$fileContentHash$fileSize"

@@ -18,7 +18,7 @@ trait IndexingService
 
 object IndexingService
 {
-  val VIDEO_FILE_FORMATS = List("mp4", "flv", "mkv", "avi")
+  val VIDEO_FILE_FORMATS = List("mp4")
 
   def isVideoFile(file: File): Boolean = VIDEO_FILE_FORMATS.exists(file.getPath.endsWith)
 
